@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+ background-color: #fff;   
+}
+    
+path {
+  fill: #ddd;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.land {
+ fill: #ddd;   
+}
+
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script>
+
+var width = 960,
+    height = 600;
+
+var proj = d3.geo.albers()
+        .center([0,60])
+        .rotate([92.5,0])
+        .parallels([49,60])
+        .scale(1000)
+        .translate([width/2, height/2]);
+
+    
+var path = d3.geo.path()
+    .projection(proj);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+d3.json("can.json", function(error, can) {
+  if (error) return console.error(error);
+
+    console.log(can);
+    var dom = d3.extent(topojson.feature(can,can.objects.subdivs).features, function(d) {
+        return d.properties.populationch;   
+    });
+    
+    var color = d3.scale.linear()
+        .domain(dom)
+        .range([0,255]);
+
+
+    svg.append("g")
+        .attr("class", "subdivs")
+        .selectAll("path")
+        .data(topojson.feature(can, can.objects.subdivs).features)
+        .enter().append("path")
+        .attr("style", function(d) { 
+            /*console.log(diffcolor(d.properties.meaninc-d.properties.medianinc));*/
+            var r = (color(d.properties.populationch)).toFixed(0),
+                g = 0,//(mediancolor(d.properties.medianinc)).toFixed(0),
+                b = 0;//(diffcolor(d.properties.meaninc-d.properties.medianinc)).toFixed(0);
+        return "fill: rgb("+r+","+g+","+b+");"; 
+      })
+        .attr("d", path);
+    /*
+    svg.append("path")
+        .datum(topojson.feature(can,can.objects.nation))
+        .attr("class","land")
+        .attr("d",path);
+        */
+/*
+    svg.append("path")
+        .datum(topojson.mesh(can,can.objects.provs, function(a,b) { return a!==b }))
+        .attr("class","border border--provs")
+        .attr("d",path);
+  */  
+    /*
+    console.log(svg.append("g")
+        .attr("class","bubble")
+        .selectAll("circle")
+                .data(topojson.feature(us,us.objects.counties).features.filter(function(d) {
+                 if (d.id.substr(0,2)!=="72") {
+                    return d;   
+                 }
+                }))
+                .enter()
+                .append("circle")
+                .attr("transform",function(d) {
+                    if (d.id.substr(0,2) === "72" ) {//isNaN(path.centroid(d)[0])) {
+                        console.log("did we get here?"+d);
+                    }
+                    return "translate(" + path.centroid(d) + ")"; 
+                }));
+                */
+/* Trying to put this in the makefile. Not really working though.
+build/counties2.json: build/gz_2010_us_050_00_20m.shp
+    ogr2ogr -f GeoJSON \
+            -where "STATE != '72'" \
+            $@ \
+            $<
+*/
+    /*
+    var radius = d3.scale.sqrt()
+        .domain([0,1e6])
+        .range([0,15]);
+
+        
+    svg.append("g")
+        .attr("class","bubble")
+        .selectAll("circle")
+        .data(topojson.feature(us,us.objects.counties).features.filter(function(d) {
+             if (d.id.substr(0,2)!=="72") {
+                return d;   
+             }
+            }) // this is still inside .data()
+        .sort(function(a, b) { return b.properties.population - a.properties.population; }))
+        .enter()
+        .append("circle")
+        .attr("transform",function(d) { 
+            return "translate(" + path.centroid(d) + ")";
+        })
+        .attr("r",function(d) {
+            return radius(d.properties.population);
+        });
+    
+        var legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(" + (width - 50) + "," + (height - 20) + ")")
+            .selectAll("g")
+            .data([1e6, 5e6, 10e6])
+            .enter().append("g");
+
+        legend.append("circle")
+            .attr("cy", function(d) { return -radius(d); })
+            .attr("r", radius);
+
+        legend.append("text")
+            .attr("y", function(d) { return -2 * radius(d); })
+            .attr("dy", "1.3em")
+            .text(d3.format(".1s"));*/
+});
+
+</script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
