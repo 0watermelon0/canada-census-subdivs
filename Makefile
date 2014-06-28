@@ -11,15 +11,14 @@ build/shapes: data/shapes
 
 build/shapes/gcsd000b11a_e.shp: build/shapes
 
-# GeoJSON?
-
-build/subdivs.json: build/shapes/gcsd000b11a_e.shp popchange.csv
+build/subdivs.json: build/shapes/gcsd000b11a_e.shp total.csv
 	node_modules/.bin/topojson \
 		-o $@ \
 		--id-property='CCSUID,geo_code' \
-		--external-properties=popchange.csv \
-		--properties='populationch=+d.properties["popchange"]' \
-		--simplify=.1 \
+		--external-properties=total.csv \
+		--properties='total=+d.properties["total"]' \
+		-q 1e4 \
+		-s 1e-7 \
 		--filter=none \
 		-- subdivs=$<
 
