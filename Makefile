@@ -14,11 +14,12 @@ build/shapes/gcsd000b11a_e.shp: build/shapes
 build/subdivs.json: build/shapes/gcsd000b11a_e.shp total.csv
 	node_modules/.bin/topojson \
 		-o $@ \
-		--id-property='CCSUID,geo_code' \
+		--id-property='CSDUID,geo_code' \
 		--external-properties=total.csv \
 		--properties='total=+d.properties["total"]' \
+		--properties='name=CSDNAME' \
 		-q 1e4 \
-		-s 1e-7 \
+		-s 1e-8 \
 		--filter=none \
 		-- subdivs=$<
 
