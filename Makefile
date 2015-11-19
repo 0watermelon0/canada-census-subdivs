@@ -9,15 +9,13 @@ build/shapes: data/shapes
 	mkdir -p $(dir $@)
 	cp -r data/shapes $@
 
-build/shapes/gcsd000b11a_e.shp: build/shapes
+build/shapes/ger_000b06a_e.shp: build/shapes
 
-build/subdivs.json: build/shapes/gcsd000b11a_e.shp total.csv
+build/subdivs.json: build/shapes/ger_000b06a_e.shp
 	node_modules/.bin/topojson \
 		-o $@ \
-		--id-property='CSDUID,geo_code' \
-		--external-properties=total.csv \
-		--properties='total=+d.properties["total"]' \
-		--properties='name=CSDNAME' \
+		--id-property='ERUID,geo_code' \
+		--properties='name=ERNAME' \
 		-q 1e4 \
 		-s 1e-8 \
 		--filter=none \
